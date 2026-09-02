@@ -1,0 +1,27 @@
+# Local state and generated caches
+.wrangler/
+data/
+work/
+**/node_modules/
+cloudflare/dist*/
+
+# Local credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.dev.vars
+
+# Large source videos are kept locally; the derived clips used by the site stay versioned.
+outputs/elements-site/assets/source.mp4
+outputs/elements-site/assets/master/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+
