@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "hiphop-practice-video-vault",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-12",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "SUPABASE_URL": "https://bnjsiltlknqmsnplyjyq.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_peizXMU_IqV7-7nQeKl35A_BFht38tJ",
+    "ALLOWED_ORIGINS": "http://127.0.0.1:4173,http://localhost:4173,http://127.0.0.1:4174,http://localhost:4174"
+  },
+  "r2_buckets": [
+    {
+      "binding": "PRACTICE_VIDEOS",
+      "bucket_name": "hiphop-practice-videos"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
+
