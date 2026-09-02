@@ -1,0 +1,5 @@
+project_id = "bnjsiltlknqmsnplyjyq"
+
+[functions.practice-video-vault]
+verify_jwt = true
+
