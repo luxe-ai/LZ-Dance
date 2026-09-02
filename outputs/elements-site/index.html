@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hip-Hop Dance Elements</title>
+  <link rel="stylesheet" href="styles.css?v=43" />
+</head>
+<body>
+  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="打开功能导航" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <aside id="appSidebar" class="app-sidebar" aria-label="网站功能导航">
+    <a class="sidebar-brand" href="#home" aria-label="回到首页"><i></i><span>舞蹈元素<br>资料库</span></a>
+    <nav class="sidebar-nav">
+      <a class="sidebar-link is-active" href="#dailyPractice" data-section="dailyPractice">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg><span>今日练习</span>
+      </a>
+      <a class="sidebar-link" href="#practiceRecords" data-section="practiceRecords">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h4"/></svg><span>练舞记录</span>
+      </a>
+      <a class="sidebar-link" href="#classAnalysis" data-section="classAnalysis">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5M17 13l2 2-2 2"/></svg><span>课堂分析</span>
+      </a>
+      <a class="sidebar-link" href="#elementLibrary" data-section="elementLibrary">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span>全部元素</span>
+      </a>
+    </nav>
+    <div class="sidebar-filter" aria-label="元素分类筛选">
+      <span>元素筛选</span>
+      <div>
+        <button class="filter-btn is-active" type="button" data-category="all">全部</button>
+        <button class="filter-btn" type="button" data-category="hand">手部</button>
+        <button class="filter-btn" type="button" data-category="foot">脚步</button>
+      </div>
+    </div>
+    <p class="sidebar-private"><span>PRIVATE</span>练习记录默认仅保存在这台设备</p>
+  </aside>
+  <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
+
+  <header id="home" class="hero">
+    <div class="hero__eyebrow">HIP-HOP MOVEMENT LIBRARY</div>
+    <h1>舞蹈元素资料库</h1>
+    <p>从原视频整理的 87 个动作元素。搜索名称，点击卡片即可播放原始时长片段。</p>
+    <label class="search">
+      <span aria-hidden="true">⌕</span>
+      <input id="searchInput" type="search" placeholder="搜索元素，例如 Running Man、Wave、Step…" autocomplete="off" />
+      <kbd>/</kbd>
+    </label>
+    <div class="summary"><strong id="resultCount">87</strong> 个元素</div>
+  </header>
+
+  <main>
+    <section id="shotQuery" class="shot-query" aria-labelledby="shotQueryTitle" hidden data-feature-status="archived">
+      <div class="shot-query__heading">
+        <div>
+          <h2 id="shotQueryTitle">连续姿态查元素</h2>
+          <p>粘贴、拖入或选择练习视频，系统会连续提取人体关键点并比较动作轨迹；单张图片只提供静态姿态候选。</p>
+        </div>
+        <span id="collectionCount" class="collection-count">动作库 0</span>
+      </div>
+
+      <div class="shot-workbench">
+        <div class="shot-upload">
+          <input id="shotInput" type="file" accept="image/*,video/*" hidden />
+          <div id="shotDropzone" class="shot-dropzone" tabindex="0" role="button" aria-label="粘贴、选择或拖入图片和视频">
+            <img id="shotPreview" alt="上传的视频截图预览" hidden />
+            <video id="shotVideoPreview" controls muted playsinline hidden></video>
+            <canvas id="poseOverlay" class="pose-overlay" aria-hidden="true" hidden></canvas>
+            <div id="shotPreviewEmpty" class="shot-dropzone__empty">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h4l1.4-2h5.2l1.4 2h4a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z"/><circle cx="12" cy="12" r="3.5"/></svg>
+              <strong>粘贴、拖入或选择</strong>
+              <span>推荐 2–12 秒单个动作视频 · 图片 / MP4 / WebM</span>
+            </div>
+          </div>
+          <button id="shotPick" class="shot-pick" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+            选择图片或视频
+          </button>
+          <p id="shotStatus" class="shot-status" aria-live="polite">文件只在你的浏览器中处理，不会上传；视频会逐帧提取连续人体关键点。</p>
+        </div>
+
+        <div class="shot-candidates" aria-labelledby="candidateTitle">
+          <div class="shot-panel-heading">
+            <h3 id="candidateTitle">连续动作候选</h3>
+            <span>根据身体关键点轨迹排序</span>
+          </div>
+          <div class="match-scope"><strong>比对范围</strong><span>网站现有 87 个动作的连续关键点轨迹，不使用封面、不连接互联网搜索</span></div>
+          <div id="matchVerdict" class="match-verdict" hidden></div>
+          <div id="shotResults" class="shot-results">
+            <div class="shot-empty-result">粘贴或上传素材后，这里会出现候选动作。</div>
+          </div>
+          <div id="newActionPanel" class="new-action-panel" hidden>
+            <div><strong>这些都不是？</strong><span>把它作为尚未收录的新动作保存，之后再补充名称。</span></div>
+            <label><span>动作名称（可选）</span><input id="newActionName" type="text" maxlength="48" placeholder="例如：老师自创变形" /></label>
+            <button id="saveNewAction" type="button">作为新动作收藏</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="collection" aria-labelledby="collectionTitle">
+        <div class="shot-panel-heading">
+          <div><h3 id="collectionTitle">我的动作库</h3><span>你从截图中确认过的练习动作</span></div>
+          <button id="clearCollection" class="collection-clear" type="button" hidden>清空</button>
+        </div>
+        <div id="savedCollection" class="saved-collection">
+          <p class="collection-empty">还没有收藏。上传一张截图开始吧。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="dailyPractice" class="daily" aria-labelledby="dailyTitle">
+      <div class="section-heading">
+        <div><div class="section-kicker">TODAY'S FIVE</div><h2 id="dailyTitle">Hip-Hop 每日练习</h2><p>每天随机推荐 5 个元素，选其中 3 个开始今天的练习。</p></div>
+        <div class="carousel-actions"><button id="dailyPrev" type="button" aria-label="上一个推荐">←</button><button id="dailyNext" type="button" aria-label="下一个推荐">→</button></div>
+      </div>
+      <div id="dailyTrack" class="daily-track"></div>
+      <div class="daily-selection-bar">
+        <div><strong id="dailySelectionCount">已选 0 / 3</strong><span id="dailySelectionHint">从上面的 5 个元素里，选出今天最想练的 3 个。</span></div>
+        <button id="clearDailySelection" type="button" disabled>重新选择</button>
+      </div>
+      <section id="variationPracticeQueue" class="variation-practice-queue" aria-labelledby="variationPracticeQueueTitle">
+        <div class="variation-practice-queue__head">
+          <div><span>CLASS VARIATIONS</span><strong id="variationPracticeQueueTitle">待练变形</strong></div>
+          <small id="variationPracticeQueueCount">0 个片段</small>
+        </div>
+        <div id="variationPracticeQueueList" class="variation-practice-queue__list">
+          <p>课堂里 Mark 的变形会出现在这里。</p>
+        </div>
+      </section>
+    </section>
+
+    <section id="classAnalysis" class="class-analysis" aria-labelledby="classAnalysisTitle">
+      <div class="section-heading">
+        <div><div class="section-kicker">AI CLASS REVIEW</div><h2 id="classAnalysisTitle">课堂视频分析</h2><p>把课堂视频与老师口述放在一起，提取动作候选、练习要点和今天的问题。</p></div>
+        <span id="classAnalysisCount" class="record-count">0 节课堂</span>
+      </div>
+      <div class="class-analysis-workspace">
+      <form id="classAnalysisForm" class="class-analysis-form">
+        <div class="class-meta-fields">
+          <label><span>课堂名称</span><input id="classTitle" type="text" maxlength="120" placeholder="例如：HZ 老师 Hip-Hop 基础课" required /></label>
+          <label class="class-date-field"><span>上课日期 · 点击打开日历</span><input id="classDate" type="date" required /></label>
+          <label><span>常用老师</span><select id="classTeacher"><option value="">请选择老师</option><option value="__new__">＋ 添加新老师</option></select><button id="forgetClassTeacher" class="class-forget-teacher" type="button" hidden>从常用列表移除</button></label>
+          <label id="classTeacherNewField" hidden><span>新老师姓名 · 保存后会记住</span><input id="classTeacherNew" type="text" maxlength="80" placeholder="输入老师姓名" /></label>
+        </div>
+        <div class="class-analysis-grid">
+          <div class="class-video-input">
+            <div class="practice-block-heading"><div><span>课堂视频</span><strong>电脑可粘贴，iPhone 可直接从照片选择</strong></div><small>视频用于人物、动作与身体轨迹分析</small></div>
+            <input id="classVideoFile" type="file" accept="video/*" hidden />
+            <div id="pasteClassVideo" class="class-video-dropzone" role="button" tabindex="0" contenteditable="true" aria-label="课堂视频粘贴和拖放区域">
+              <strong>把 MP4 粘贴到这里</strong>
+              <span>先点一下这个框，再按 Ctrl+V；也可以把视频文件直接拖进来</span>
+              <small>浏览器不接收粘贴时，请用下方的文件入口</small>
+            </div>
+            <div class="class-video-actions"><button id="pickClassVideo" class="practice-secondary-button" type="button">选择 MP4 / 从照片选择</button><button id="removeClassVideo" class="practice-text-button" type="button" hidden>移除视频</button></div>
+            <span id="classVideoMeta" class="practice-douyin__meta">还没有选择课堂视频</span>
+            <video id="classVideoPreview" class="class-video-preview" controls playsinline hidden></video>
+            <section id="classPersonPicker" class="class-person-picker" hidden aria-labelledby="classPersonPickerTitle">
+              <div class="practice-block-heading"><div><span>角色确认</span><strong id="classPersonPickerTitle">点一下画面中的你</strong></div><small id="classPersonStatus">正在截取人物画面…</small></div>
+              <div id="classPersonFrameWrap" class="class-person-frame-wrap"><img id="classPersonFrame" alt="课堂视频人物确认画面" /><div id="classPersonChoices" class="class-person-choices"></div></div>
+              <div class="class-person-footer"><p>这一步只用于锁定你的身体轨迹，不建立人脸档案。只有识别到至少 4 人才进入正常人物确认。</p><button id="retryClassPeople" class="practice-text-button" type="button" hidden>重新识别开场人物</button></div>
+            </section>
+            <section id="classTeacherCut" class="class-teacher-cut" aria-labelledby="classTeacherCutTitle">
+              <div class="practice-block-heading"><div><span>老师直拍</span><strong id="classTeacherCutTitle">自动截取核心人物的示范片段</strong></div><small id="classTeacherCutStatus">等待人物识别</small></div>
+              <fieldset class="class-teacher-presence">
+                <legend>这段课堂视频里有老师吗？</legend>
+                <label><input type="radio" name="classTeacherPresence" value="yes" />有老师 · 从核心人物中截取</label>
+                <label><input type="radio" name="classTeacherPresence" value="no" />没有老师 · 不在课堂视频里猜</label>
+              </fieldset>
+              <div class="class-teacher-source">
+                <div><strong>课堂视频里不一定有老师</strong><span>如果老师没有入镜，或系统选不到可靠老师，请额外上传老师示范视频；不会替换课堂视频，也不会影响学员分析。</span></div>
+                <input id="teacherDemoVideoFile" type="file" accept="video/*" hidden />
+                <button id="pickTeacherDemoVideo" class="practice-secondary-button" type="button">额外上传老师示范</button>
+                <button id="removeTeacherDemoVideo" class="practice-text-button" type="button" hidden>移除老师示范</button>
+                <small id="teacherDemoVideoMeta">未额外上传 · 先确认课堂视频里是否有老师</small>
+              </div>
+              <div id="classTeacherCandidates" class="class-teacher-candidates" aria-label="老师候选人物"></div>
+              <div class="class-teacher-cut__preview">
+                <video id="classTeacherCutPreview" controls playsinline preload="metadata"></video>
+                <div id="classTeacherCutEmpty"><strong>正在准备老师示范内容</strong><span>会优先选择持续入镜、处于画面核心且示范动作更明显的人物。</span></div>
+              </div>
+              <div class="class-teacher-cut__actions"><button id="regenerateTeacherCut" class="practice-secondary-button" type="button" disabled>重新截取所选老师</button><span id="classTeacherCutMeta">人物身份和示范归属不可靠时会标记“需要确认”</span></div>
+            </section>
+          </div>
+          <div class="class-transcript-input">
+            <div class="practice-block-heading"><div><span>老师口述 / 课堂记录</span><strong>从视频转写，或手动补充文字</strong></div><small>点击才调用 · 不会自动产生费用</small></div>
+            <textarea id="classTranscript" maxlength="6000" placeholder="当前请粘贴视频转写或课堂笔记。例如：老师说胸部 Twist 要从胸椎发起；练了 Running Man 和 BK Bounce；问题是重心太高、抢拍……"></textarea>
+            <div class="class-transcript-actions"><button id="transcribeClassVideo" class="practice-secondary-button" type="button" disabled>从课堂视频提取口述</button><span id="classTranscriptionStatus" aria-live="polite">先选择课堂视频；需要登录私人账户</span></div>
+            <p class="class-transcript-note">视频负责动作与轨迹；转写文字负责提取老师讲到的要点、课堂练习和明确提到的问题。没有可靠证据的内容会标记为“需要确认”。</p>
+          </div>
+        </div>
+        <div class="class-analysis-actions"><p id="classAnalysisStatus" aria-live="polite">视频负责动作候选，文字负责课堂要点；无法确认的内容会明确标记。</p><button id="analyzeClass" class="practice-ai-button" type="button">✦ 生成课堂分析</button></div>
+        <section id="classAnalysisResult" class="class-analysis-result" aria-labelledby="classAnalysisResultTitle" hidden>
+          <div class="practice-block-heading"><div><span>分析草稿</span><strong id="classAnalysisResultTitle">请确认后再保存</strong></div><small id="classAnalysisModel">本地动作匹配 + AIsa 文字整理</small></div>
+          <div class="class-move-candidates-block"><span>动作候选 · 动态角色（不是识别结论）</span><div id="classMoveCandidates" class="class-move-candidates"></div></div>
+          <section id="classChatcutClips" class="class-chatcut-clips" aria-labelledby="classChatcutClipsTitle" hidden>
+            <div class="class-chatcut-clips__head">
+              <div><span>CHATCUT CLIPS</span><strong id="classChatcutClipsTitle">把课堂片段存成元素变形</strong></div>
+              <small>没有老师口述时，也会按动作片段切分</small>
+            </div>
+            <div id="classClipCandidates" class="class-clip-candidates"></div>
+            <p id="classClipStatus" aria-live="polite">先预览并确认归属元素，再选择“加入待练”或“存入元素集合”。</p>
+          </section>
+          <section id="classMovementEvidence" class="class-movement-evidence" aria-label="身体表现证据" hidden>
+            <article class="movement-evidence-card">
+              <div class="movement-evidence-card__head"><span>身体轨迹</span><small id="classTrajectoryConfidence">证据待生成</small></div>
+              <canvas id="classTrajectoryCanvas" width="560" height="210" aria-label="身体中心运动轨迹"></canvas>
+              <strong id="classTrajectoryTitle">等待视频分析</strong><p id="classTrajectoryCopy"></p>
+            </article>
+            <article class="movement-evidence-card">
+              <div class="movement-evidence-card__head"><span>动作框架</span><small id="classFrameConfidence">证据待生成</small></div>
+              <div id="classFrameVisual" class="movement-frame-visual"><i></i><b></b><em>动作占用空间</em></div>
+              <strong id="classFrameTitle">等待视频分析</strong><p id="classFrameCopy"></p>
+            </article>
+            <article class="movement-evidence-card">
+              <div class="movement-evidence-card__head"><span>质感线索</span><small id="classTextureConfidence">证据待生成</small></div>
+              <canvas id="classTextureCanvas" width="560" height="210" aria-label="速度、停顿与加速度线索"></canvas>
+              <strong id="classTextureTitle">等待视频分析</strong><p id="classTextureCopy"></p>
+            </article>
+          </section>
+          <section id="classCoachSummary" class="class-coach-summary" hidden>
+            <div><span>积极反馈</span><strong>今天坚持跳完已经很棒</strong><p id="classCoachFocus">下一遍只专注一个重点。</p></div>
+            <button id="replayWithFocus" type="button">带着这个重点再练一遍 <span>→</span></button>
+          </section>
+          <div class="class-note-sheet">
+            <div class="class-result-grid">
+              <label><span>动作候选</span><textarea id="classMovesResult" maxlength="800"></textarea></label>
+              <label><span>课堂练习要点 · 只从课堂内容提取</span><textarea id="classPointsResult" maxlength="1800"></textarea></label>
+              <label><span>视频轨迹发现 · 来自你在画面中的运动</span><textarea id="classProblemsResult" maxlength="1800"></textarea></label>
+              <label class="class-confirmation-field"><span>需要确认 · 视频或文字证据不足</span><textarea id="classConfirmationsResult" maxlength="1800"></textarea></label>
+              <label class="class-summary-field"><span>课堂总结</span><textarea id="classSummaryResult" maxlength="2400"></textarea></label>
+            </div>
+            <aside id="classNoteCompanion" class="class-note-companion" hidden>
+              <canvas id="classNoteCompanionCanvas" width="360" height="440" aria-label="课堂笔记动作搭子"></canvas>
+              <div><strong id="classNoteCompanionName">动作搭子</strong><span>这位负责动，你负责记。</span></div>
+            </aside>
+          </div>
+          <div class="class-result-actions"><button id="discardClassAnalysis" class="practice-cancel-edit" type="button">清除分析</button><button id="saveClassAnalysis" class="practice-secondary-button" type="submit">保存课堂分析</button></div>
+        </section>
+      </form>
+      <aside class="class-quick-guide" aria-label="课堂分析使用说明">
+        <details open>
+          <summary><span>课堂分析怎么用</span><small>5 步 · 可收起</small></summary>
+          <ol>
+            <li><b>上传课堂视频</b><span>电脑可拖入或粘贴 MP4；iPhone 点“从照片选择”。</span></li>
+            <li><b>确认哪个是你</b><span>开场识别到至少 4 人后，点选自己的框；人数不足就重新识别。</span></li>
+            <li><b>说明有没有老师</b><span>有老师才确认核心人物；没有老师就直接跳过。老师另拍时可额外上传示范。</span></li>
+            <li><b>补充课堂口述</b><span>可粘贴笔记，或主动点击提取口述；系统不会自动调用付费转写。</span></li>
+            <li><b>生成、确认、保存</b><span>先生成分析草稿，再把 ChatCut 片段加入待练或元素集合，最后保存课堂。</span></li>
+          </ol>
+          <p><strong>记住：</strong>“生成课堂分析”只是草稿；点“保存课堂分析”才会留下这节课。</p>
+        </details>
+      </aside>
+      </div>
+      <div id="classAnalysisList" class="class-analysis-list"><div class="practice-record-empty"><strong>还没有课堂分析</strong><span>上传课堂视频或粘贴课堂记录，生成第一份可回看的课堂总结。</span></div></div>
+    </section>
+
+    <section id="practiceRecords" class="practice-records" aria-labelledby="practiceRecordsTitle">
+      <div class="section-heading">
+        <div><div class="section-kicker">PRIVATE PRACTICE ARCHIVE</div><h2 id="practiceRecordsTitle">练舞记录</h2><p>补记过去或记录今天：动作、歌曲、地点、同伴、视频、感受与回馈都会一起留在这台设备上。</p></div>
+        <div class="practice-record-tools">
+          <span id="practiceRecordCount" class="record-count">0 次练习</span>
+          <button id="backupPracticeRecords" class="practice-backup-button" type="button">备份全部记录</button>
+          <small id="practiceBackupStatus" aria-live="polite">文字与视频会一起备份</small>
+        </div>
+      </div>
+      <section id="cloudPanel" class="cloud-panel" aria-labelledby="cloudPanelTitle">
+        <div class="cloud-panel__summary">
+          <div>
+            <span class="cloud-panel__kicker">PRIVATE CLOUD VAULT</span>
+            <h3 id="cloudPanelTitle">私人云端资料库</h3>
+            <p id="cloudStatus" aria-live="polite">正在检查 Supabase 与 Cloudflare R2…</p>
+          </div>
+          <span id="cloudBadge" class="cloud-badge" data-state="checking">检查中</span>
+        </div>
+        <form id="cloudAuthForm" class="cloud-auth-form">
+          <label><span>邮箱</span><input id="cloudEmail" type="email" autocomplete="email" placeholder="你的登录邮箱" required /></label>
+          <label><span>密码</span><input id="cloudPassword" type="password" autocomplete="current-password" minlength="6" placeholder="至少 6 位" required /></label>
+          <div class="cloud-auth-actions">
+            <button id="cloudSignIn" type="submit">登录并同步</button>
+            <button id="cloudSignUp" type="button">创建私人账户</button>
+          </div>
+        </form>
+        <div id="cloudAccount" class="cloud-account" hidden>
+          <div><strong id="cloudAccountEmail"></strong><span id="cloudSyncMeta">尚未同步</span></div>
+          <div class="cloud-account__actions">
+            <button id="cloudSyncNow" type="button">立即同步</button>
+            <button id="cloudSignOut" type="button">退出云端</button>
+          </div>
+        </div>
+        <p class="cloud-privacy">登录后，文字记录只写入你自己的 Supabase 行；视频进入私有 R2，并且只有你的登录令牌可以读取。未登录或断网时仍先保存在本机。</p>
+      </section>
+      <form id="practiceForm" class="practice-form">
+        <div class="practice-form__heading">
+          <div><span>PRIVATE PRACTICE LOG</span><h3 id="practiceFormTitle">新建一条练舞记录</h3><p id="practiceFormDescription">可以补记以前的练习；每日选择会自动带入，但不必选满 3 个动作才能记录。</p></div>
+          <label>练习日期<input id="practiceDate" type="date" required /></label>
+        </div>
+
+        <div class="practice-voice">
+          <div class="practice-block-heading"><div><span>AI 快速口述</span><strong>把刚才练的内容直接说出来</strong></div><span id="practiceVoiceStatus" aria-live="polite">AIsa · DeepSeek 智能整理</span></div>
+          <textarea id="practiceVoiceTranscript" maxlength="1000" placeholder="例如：昨天在南山舞房和阿琳练了 BK Bounce 和 Running Man，感觉脚下还不够松，下次要放慢速度。也可以直接打字。"></textarea>
+          <div class="practice-voice__actions">
+            <button id="practiceVoiceButton" class="practice-secondary-button" type="button"><span aria-hidden="true">●</span> 开始语音输入</button>
+            <button id="applyPracticeVoice" class="practice-ai-button" type="button"><span aria-hidden="true">✦</span> 智能整理</button>
+          </div>
+          <small class="practice-typeless-tip">小建议：使用 Typeless 来语音输入，再粘贴到这里，会更快速一点。内容只会在点击“智能整理”时发送给 AIsa，密钥不会进入浏览器。</small>
+        </div>
+
+        <div class="practice-move-picker">
+          <div class="practice-block-heading"><div><span>练了什么</span><strong>从全部 87 个元素中添加</strong></div><small>数量不限 · 每日 3 个只是推荐</small></div>
+          <div class="practice-move-picker__controls">
+            <select id="practiceMoveSelect" aria-label="选择练习动作"></select>
+            <button id="addPracticeMove" class="practice-secondary-button" type="button">添加动作</button>
+          </div>
+          <label class="practice-other-moves"><span>其他练习 / Routine / 抖舞名称</span><input id="practiceOtherMoves" type="text" maxlength="180" placeholder="动作库里没有的内容也可以直接记在这里" /></label>
+        </div>
+        <div id="practiceMoveEmpty" class="practice-move-empty">还没有添加动作。可以从上面选择，也可以直接保存一条自由练习记录。</div>
+        <div id="practiceMoveEditors" class="practice-move-editors"></div>
+
+        <div class="practice-douyin">
+          <div class="practice-block-heading"><div><span>抖舞标记</span><strong>附上这次扒舞或练习的视频</strong></div><small>登录后视频会保存到私人 R2</small></div>
+          <div class="practice-douyin__controls">
+            <input id="practiceDouyinTitle" type="text" maxlength="120" placeholder="抖音舞曲 / 视频名称（可选）" />
+            <input id="practiceDouyinVideo" type="file" accept="video/*" hidden />
+            <button id="pickPracticeDouyinVideo" class="practice-secondary-button" type="button">上传抖音视频</button>
+            <button id="pastePracticeDouyinVideo" class="practice-secondary-button" type="button">粘贴视频</button>
+            <button id="removePracticeDouyinVideo" class="practice-text-button" type="button" hidden>移除视频</button>
+          </div>
+          <p class="practice-douyin__tip"><strong>支持复制粘贴视频</strong><span>粘贴后可提取视频里的动作元素，并根据当前资料库补充舞种。</span></p>
+          <span id="practiceDouyinMeta" class="practice-douyin__meta">还没有选择视频</span>
+          <div id="practiceVideoExtraction" class="practice-video-extraction" aria-live="polite" hidden></div>
+          <video id="practiceDouyinPreview" class="practice-douyin__preview" controls playsinline hidden></video>
+        </div>
+
+        <div class="practice-context">
+          <label><span>在哪里练</span><input id="practiceLocation" type="text" maxlength="60" placeholder="例如：家里、舞房、深圳湾" /></label>
+          <label><span>跟谁一起</span><select id="practicePartners"><option value="">请选择</option><option value="自己">自己</option><option value="朋友">跟朋友</option><option value="老师">跟老师</option><option value="同学">跟同学</option><option value="舞伴">跟舞伴</option></select></label>
+          <label><span>舞种 / 主要练习</span><input id="practiceDanceStyle" type="text" maxlength="120" placeholder="例如：Afro、Hip-Hop、抖舞" /></label>
+          <label><span>练习歌曲 / 舞曲</span><input id="practiceMusic" type="text" maxlength="180" placeholder="例如：亚马尔进行曲" /></label>
+          <label class="practice-context__feeling"><span>今天的感受</span><textarea id="practiceFeeling" maxlength="400" placeholder="身体哪里比较松？哪个节奏最舒服？下次想继续改什么？"></textarea></label>
+          <label class="practice-context__wins"><span>做得好的地方</span><textarea id="practiceWins" maxlength="800" placeholder="顺动作、律动、卡点、成片效果……"></textarea></label>
+          <label class="practice-context__attention"><span>需要注意</span><textarea id="practiceAttention" maxlength="800" placeholder="细节、幅度、节奏、画面或其他问题"></textarea></label>
+          <label class="practice-context__technique"><span>动作要领 / 新发现</span><textarea id="practiceTechnique" maxlength="800" placeholder="例如：顺拐更美观，动作发力要干脆"></textarea></label>
+          <label class="practice-context__feedback"><span>收到的回馈</span><textarea id="practiceFeedback" maxlength="500" placeholder="老师或朋友给了什么建议？没有也可以不填。"></textarea></label>
+          <label class="practice-context__next"><span>下次练习重点</span><textarea id="practiceNextStep" maxlength="300" placeholder="下一次最想修正或继续尝试什么？"></textarea></label>
+        </div>
+        <div class="practice-submit-row"><p id="practiceSaveStatus" aria-live="polite">记录只保存在这台设备上。</p><div class="practice-submit-actions"><button id="cancelPracticeEdit" class="practice-cancel-edit" type="button" hidden>取消编辑</button><button id="savePracticeRecord" type="submit">保存练舞记录</button></div></div>
+      </form>
+      <div id="practiceRecordList" class="practice-record-list">
+        <div class="practice-record-empty"><strong>还没有练舞记录</strong><span>在上面补记一次练习，地点、同伴、视频和回馈都会一起保存。</span></div>
+      </div>
+    </section>
+
+    <section class="motion-lab" aria-labelledby="motionLabTitle">
+      <div class="section-heading">
+        <div><div class="section-kicker">MOTION LAB · PROTOTYPE</div><h2 id="motionLabTitle">滑动变形卡片</h2><p>先用 3 个元素测试：点击卡片，体验连续放大、全屏播放与左右切换。</p></div>
+        <span class="prototype-badge">交互原型</span>
+      </div>
+      <div id="prototypeTrack" class="prototype-track"></div>
+    </section>
+
+    <section class="tips" aria-labelledby="tipsTitle">
+      <div class="section-heading"><div><div class="section-kicker">HZ TEACHER'S METHOD</div><h2 id="tipsTitle">舞蹈小 Tips</h2></div></div>
+      <div class="tips-grid">
+        <article><strong>01</strong><h3>每天练 3 个</h3><p>系统会推荐 5 个，从中挑选最想练的 3 个。</p></article>
+        <article><strong>02</strong><h3>一个元素 × 4 首歌</h3><p>用不同音乐反复练习，建立节奏适应能力。</p></article>
+        <article><strong>03</strong><h3>3 个元素 + 3 个变形</h3><p>每个元素探索一个变形，让动作真正变成自己的。</p></article>
+        <article><strong>04</strong><h3>整理，但保留给自己</h3><p>每次练完做个人记录；自己的练习内容不必告诉别人。</p></article>
+        <article><strong>05</strong><h3>身体上限 4–6 个</h3><p>一次别塞太多，尊重身体当天能承受的容量。</p></article>
+        <article class="tip-highlight"><strong>06</strong><h3>最重要：用喜欢的歌</h3><p>喜欢的音乐会让练习更持久，也更有自己的感觉。</p></article>
+      </div>
+    </section>
+
+    <div id="elementLibrary" class="library-heading"><div class="section-kicker">ALL ELEMENTS</div><h2>全部元素</h2></div>
+    <section id="grid" class="grid" aria-live="polite"></section>
+    <section id="emptyState" class="empty" hidden>
+      <div>没有找到这个元素</div>
+      <button id="clearSearch" type="button">清除搜索</button>
+    </section>
+  </main>
+
+  <template id="cardTemplate">
+    <article class="card">
+      <button class="media" type="button" aria-label="播放片段">
+        <img class="cover" alt="" loading="lazy" />
+        <video preload="metadata" playsinline></video>
+        <span class="number"></span>
+        <span class="duration"></span>
+        <span class="play"><i></i></span>
+      </button>
+      <div class="card__body">
+        <div class="card__copy"><h2></h2><span class="tag">DANCE ELEMENT</span></div>
+        <canvas class="element-companion" width="180" height="180" aria-hidden="true"></canvas>
+        <span class="card__chevron" aria-hidden="true">⌄</span>
+      </div>
+      <div class="card__details" aria-hidden="true"></div>
+    </article>
+  </template>
+
+  <div id="motionViewer" class="motion-viewer" hidden>
+    <button id="viewerClose" class="viewer-close" type="button" aria-label="关闭">×</button>
+    <button id="viewerPrev" class="viewer-nav viewer-nav--prev" type="button" aria-label="上一个">←</button>
+    <article id="viewerPanel" class="viewer-panel">
+      <video id="viewerVideo" playsinline></video>
+      <div class="viewer-shade"></div>
+      <div class="viewer-copy"><span id="viewerNumber"></span><div class="viewer-kicker">HIP-HOP MOVEMENT</div><h2 id="viewerTitle"></h2><p id="viewerCategory"></p><div class="viewer-note">左右滑动或使用方向键切换元素</div></div>
+      <div class="viewer-progress"><i id="viewerProgressBar"></i></div>
+    </article>
+    <button id="viewerNext" class="viewer-nav viewer-nav--next" type="button" aria-label="下一个">→</button>
+  </div>
+
+  <script src="cloud-config.js?v=3"></script>
+  <script src="cloud-sync.js?v=4"></script>
+  <script src="app.js?v=52"></script>
+</body>
+</html>
+
