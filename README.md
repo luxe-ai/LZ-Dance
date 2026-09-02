@@ -22,7 +22,6 @@ node server.mjs
 
 - 不要提交 `.env`、`.dev.vars`、私钥、本地数据库或用户上传的视频。
 - `outputs/elements-site/assets/source.mp4` 和 `assets/master/` 是本地保留的原始大视频，不进入 GitHub。
-- 网站实际展示所需的元素短片、海报与本地姿态模型保留在仓库中。
+- 当前 GitHub 协作分支先同步源码、配置与文档；元素短片、海报、本地姿态模型等二进制素材仍保留在本地恢复目录，暂未上传。
 - 开始修改前先阅读 `outputs/下一步优化方向.md`，避免遗漏已记录的产品判断。
-
 
